@@ -13,15 +13,14 @@
     {% if field.errors %} has-error
     {% elif form.cleaned_data %} has-success
     {% endif %}
-  {% endif %}"
->{% spaceless %}
+  {% endif %}">{% spaceless %}
   {% if field|is_checkbox %}
-    <div class="form-check">
-      <span class="form-check-input mt-0">{{field}}</span>
-      <label class="form-check-label" for="{{field.auto_id}}">
-        {{field.label}}
-      </label>
-    </div>
+{#    <div class="form-check">#}
+{#      <span class="form-check-input mt-0">{{field}}</span>#}
+{#      <label class="form-check-label" for="{{field.auto_id}}">#}
+{#        {{field.label}}#}
+{#      </label>#}
+{#    </div>#}
   {% else %}
     <label class="control-label" for="{{field.auto_id}}">{{field.label|capfirst}}</label>
     {{field}}
