@@ -841,7 +841,7 @@ class LoginView(View, LogoutMixin):
                   and the "remember my identity provider" cookie is found
             :rtype: django.http.HttpResponse
         """
-        url_name = self.request.get_full_path()
+        url_name = self.request.build_absolute_uri()
         if self.service:
             try:
                 service_pattern = ServicePattern.validate(self.service)
