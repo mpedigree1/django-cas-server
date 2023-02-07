@@ -841,6 +841,7 @@ class LoginView(View, LogoutMixin):
                   and the "remember my identity provider" cookie is found
             :rtype: django.http.HttpResponse
         """
+        url_name = self.request.get_full_path()
         if self.service:
             try:
                 service_pattern = ServicePattern.validate(self.service)
@@ -923,18 +924,24 @@ class LoginView(View, LogoutMixin):
                             # database.
                             except FederatedUser.DoesNotExist:  # pragma: no cover
                                 pass
+                        template = settings.CAS_LOGIN_TEMPLATE
+                        if "agrotrack" in url_name:
+                           template = settings.KEPHIS_LOGIN_TEMPLATE
                         return render(
                             self.request,
-                            settings.CAS_LOGIN_TEMPLATE,
+                            template,
                             utils.context({
                                 'form': self.form,
                                 'post_url': reverse("cas_server:federateAuth")
                             })
                         )
             else:
+                template = settings.CAS_LOGIN_TEMPLATE
+                if "agrotrack" in url_name:
+                    template = settings.KEPHIS_LOGIN_TEMPLATE
                 return render(
                     self.request,
-                    settings.CAS_LOGIN_TEMPLATE,
+                    template,
                     utils.context({'form': self.form})
                 )
 

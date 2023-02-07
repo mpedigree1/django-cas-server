@@ -1,0 +1,129 @@
+{% load static %}
+{% load i18n %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="refresh" content="7200">
+    <title>AgroTrack :: Login</title>
+    <link rel="stylesheet"  href="{% get_static_prefix %}cas_server/custom/boostrap/bootstrap.css">
+    <link rel="stylesheet" href="{% static 'cas_server/custom/css/agrotrack.css' %}">
+    <link rel="stylesheet" href="{% static 'cas_server/custom/css/readmore.css' %}">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script type="text/javascript" src="{% get_static_prefix %}cas_server/custom/jquery/jquery-1.11.0.min.js"></script><style type="text/css"></style>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("input:not(.dp):visible:enabled:first").focus();
+         });
+    </script>
+</head>
+<body class="bg agrotrack-bg" id="loginBody"  >
+
+
+        <div class="row mybody">
+        <div class="col-md-8 col-sm-8" style="float:left; margin: auto">
+            <h1 class="white-fg" style="font-size: 50px;">AgroTrack</h1>
+            <h3 class="yellow-fg" style="font-weight: bold;">Online Management System For Agro-inputs Traceability</h3>
+
+            <div class="white-fg more" style="font-size: 21px; font-weight: 100;">
+                The Kenya Plant Health Inspectorate Service (KEPHIS) is Kenya's lead regulator in the
+                agricultural sector working to ensure that the highest, world class,
+                standards are implemented and observed in Kenya's crops farming sector.
+                <br/><br/>
+                This Portal represents the next level of technological advancement in the delivery of KEPHIS'
+                mandate. The Agency's goal is to ensure that agro-inputs within its regulatory purview, especially
+                seeds, are certified in a rigorous, secure, transparent and effective manner.
+                It has thus, in collaboration with its partners, implemented an AgroTrack solution based on
+                smart-tags and mobile phone and web technologies to achieve full traceability of the inputs
+                supply chain in the medium-term.
+
+            </div>
+        </div>
+        <div class="goldkeys col-md-4 col-sm-4" style="float:right; margin: 23px; border-radius: 15px; padding: 0; background-color: rgba(255, 255, 255, 0.90);">
+            <div style="box-shadow: 0 2px 5px #ccc; padding-bottom: 15px;">
+                <img class="form-logo" src="{% static 'cas_server/custom/img/goldkeys_logo_2.png' %}">
+                <img class="form-logo" src="{% static 'cas_server/custom/img/kephis_logo.png' %}">
+            </div>
+                <div class="header">
+                    <a href="http://www.goldkeys.org/" class="heading agrotrack-color" target="_blank">AgroTrack</a>
+                    <!--<p class="sub-heading">Unlock new markets</p> -->
+                </div>
+            <h3 style="padding: 20px 0 10px 0;">Welcome</h3>
+
+          <form class="form-signin" method="post" id="login_form"{% if post_url %} action="{{post_url}}"{% endif %}>
+                        {% csrf_token %}
+                        {% include "cas_server/bs3/agrotrack_form.html" %}
+                        {% if auto_submit %}<noscript>{% endif %}
+                        <input type="submit" value="{% trans "Log In" %}" class="btn btn-sm agrotrack-color-in-bg"/>
+                        {% if auto_submit %}</noscript>{% endif %}
+                      </form>
+
+            <div class="box-footer" style="margin: 5px;">
+                <div style="display: inline; float: left; margin-left: 10px;">
+                    Powered by <a style="display: inline; font-size: 13px; color:#D1BC44;" href="http://www.mpedigree.net/" target="_blank">
+                        mPedigree Goldkeys
+                    </a>
+                </div>
+                <a style="display: inline; float:right; " href="http://goldkeys.org/contact-us/" target="_blank">
+                    <span style="background: #D1BC44; margin-right: 10px;" class="badge">Contact Us</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="full-width alt">
+    <!-- <div class="extrainfo container"></div> -->
+    </div>
+    <!-- <footer class="page-footer">
+                <p1>
+                (c) 2016 mPedigree Network | All Rights Reserved
+                </p1>
+        </footer> -->
+    <script>
+        var showChar = 275;  // How many characters are shown by default
+        var ellipsestext = "";
+        var moretext = "Show more";
+        var lesstext = "Show less";
+
+        $('.more').each(function() {
+            var content = $(this).html();
+
+            if(content.length > showChar) {
+
+                var c = content.substr(0, showChar);
+                var h = content.substr(showChar, content.length - showChar);
+
+                var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+
+                $(this).html(html);
+            }
+
+        });
+
+        $(".morelink").click(function(){
+            if($(this).hasClass("less")) {
+                $(this).removeClass("less");
+                $(this).html(moretext);
+            } else {
+                $(this).addClass("less");
+                $(this).html(lesstext);
+            }
+            $(this).parent().prev().toggle();
+            $(this).prev().toggle();
+            return false;
+        });
+
+        jQuery(function( $ ){
+          $("#id_warn").click(function(e){
+            if($("#id_warn").is(':checked')){
+              createCookie("warn", "on", 10 * 365);
+            } else {
+              eraseCookie("warn");
+            }
+          });
+        });
+        {% if auto_submit %}document.getElementById('login_form').submit(); // SUBMIT FORM{% endif %}
+
+    </script>
+</body>
+</html>

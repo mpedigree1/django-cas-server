@@ -1,0 +1,49 @@
+{% load cas_server %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'cas_server/custom/css/agrotrack.css' %}">
+
+{#<input class="input-box" type="text" name="username" id="username" placeholder="Username" autocorrect="off" autocapitalize="off" value="">#}
+{#<input class="input-box" type="password" name="password" id="password" placeholder="Password" autocorrect="off" autocapitalize="off" value="">#}
+
+<style>
+  .agro {
+  padding: .35em .625em .75em;
+  margin: -14px -20px;
+  border: 0;
+      margin-left: 30px;
+}
+</style>
+
+{% for error in form.non_field_errors %}
+  <div class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    {{error}}
+  </div>
+{% endfor %}
+
+{% for field in form %}{% if not field|is_hidden %}
+<div class="input-box
+  {% if not form.non_field_errors %}
+    {% if field.errors %} has-error
+    {% elif form.cleaned_data %} has-success
+    {% endif %}
+  {% endif %}">{% spaceless %}
+  {% if field|is_checkbox %}
+{#    <div class="form-check">#}
+{#      <span class="form-check-input mt-0">{{field}}</span>#}
+{#      <label class="form-check-label" for="{{field.auto_id}}">#}
+{#        {{field.label}}#}
+{#      </label>#}
+{#    </div>#}
+  {% else %}
+      <label class="agro" >
+    {{field}}
+      </label>
+  {% endif %}
+  {% for error in field.errors %}
+    <span class="help-block">{{error}}</span>
+  {% endfor %}
+{% endspaceless %}</div>
+
+{% else %}{{field}}{% endif %}{% endfor %}
