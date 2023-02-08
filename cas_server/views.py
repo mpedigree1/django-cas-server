@@ -924,24 +924,19 @@ class LoginView(View, LogoutMixin):
                             # database.
                             except FederatedUser.DoesNotExist:  # pragma: no cover
                                 pass
-                        template = settings.CAS_LOGIN_TEMPLATE
-                        if "agrotrack" in url_name:
-                           template = settings.KEPHIS_LOGIN_TEMPLATE
+
                         return render(
                             self.request,
-                            template,
+                            settings.CAS_LOGIN_TEMPLATE,
                             utils.context({
                                 'form': self.form,
                                 'post_url': reverse("cas_server:federateAuth")
                             })
                         )
             else:
-                template = settings.CAS_LOGIN_TEMPLATE
-                if "agrotrack" in url_name:
-                    template = settings.KEPHIS_LOGIN_TEMPLATE
                 return render(
                     self.request,
-                    template,
+                    settings.CAS_LOGIN_TEMPLATE,
                     utils.context({'form': self.form})
                 )
 
