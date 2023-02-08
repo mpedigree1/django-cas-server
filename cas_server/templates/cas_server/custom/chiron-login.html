@@ -1,7 +1,7 @@
 
 {% block content %}
 <div>
-    {% if request.build_absolute_uri == "https://chironcas.goldkeys.net/cas/login?service=https%3A%2F%2Fchiron.goldkeys.net%2Fagrotrack%2Flogin%2F%3Fnext%3D%252F" %}
+    {% if "agrotrack" in request.build_absolute_uri %}
     {% include "cas_server/custom/agrotrack_login.html" %}
     {% else %}
     {% include "cas_server/custom/chiron.html" %}
