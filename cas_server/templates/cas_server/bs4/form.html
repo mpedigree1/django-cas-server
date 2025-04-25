@@ -21,6 +21,16 @@
 {#        {{field.label}}#}
 {#      </label>#}
 {#    </div>#}
+  {% elif field.name == 'password' %}
+      <label class="control-label" for="{{field.auto_id}}">{{field.label|capfirst}}</label>
+      <div class="input-group">
+        {{ field }}
+        <div class="input-group-append">
+          <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+            <i class="fas fa-eye" id="eyeIcon"></i>
+          </span>
+        </div>
+      </div>
   {% else %}
     <label class="control-label" for="{{field.auto_id}}">{{field.label|capfirst}}</label>
     {{field}}

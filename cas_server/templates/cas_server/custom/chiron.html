@@ -12,7 +12,8 @@
 
     <!-- LINKS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 
     <link rel="stylesheet" href="{% static 'cas_server/custom/css/login.css' %}">
@@ -20,61 +21,73 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="{% static 'cas_server/custom/img/goldkey-logo-vertical.png' %}" alt="" width="100">
-            </a>
-        </div>
-
-    </nav>
-
-    <div class="container main-body">
-        <div class="row g-2">
-            <div class="col-md-8 custom-n">
-                <h1>Unlock New <br>Markets</h1>
-                <p>
-                    The mPedigree Network is the global leader in the use of mobile and web technologies
-                    in securing products against faking, counterfeiting and diversion.
-                </p>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-section">
-                    <div class="form-header">
-                        <h2>Sign in to <br> <span>Chiron</span></h2>
-                    </div>
-                    <form class="form-signin" method="post" id="login_form"{% if post_url %} action="{{post_url}}"{% endif %}>
-                        {% csrf_token %}
-                        {% include "cas_server/bs4/form.html" %}
-                        {% if auto_submit %}<noscript>{% endif %}
-                        <input type="submit" value="{% trans "Sign In" %}" class="btn btn-dark btn-lg custom-form"/>
-                        {% if auto_submit %}</noscript>{% endif %}
-                      </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
+<nav class="navbar navbar-light bg-light">
     <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center footer">
-                <p> <a href="https://www.mpedigree.net">Visit mPedigree</a> |  Copyright 2021 &copy; mPedigree | All Rights Reserved.</p>
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'cas_server/custom/img/goldkey-logo-vertical.png' %}" alt="" width="100">
+        </a>
+    </div>
+
+</nav>
+
+<div class="container main-body">
+    <div class="row g-2">
+        <div class="col-md-8 custom-n">
+            <h1>Unlock New <br>Markets</h1>
+            <p>
+                The mPedigree Network is the global leader in the use of mobile and web technologies
+                in securing products against faking, counterfeiting and diversion.
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-section">
+                <div class="form-header">
+                    <h2>Sign in to <br> <span>Chiron</span></h2>
+                </div>
+                <form class="form-signin" method="post" id="login_form"{% if post_url %}
+                      action="{{ post_url }}"{% endif %}>
+                    {% csrf_token %}
+                    {% include "cas_server/bs4/form.html" %}
+                    {% if auto_submit %}
+                        <noscript>{% endif %}
+                    <input type="submit" value="{% trans "Sign In" %}" class="btn btn-dark btn-lg custom-form"/>
+                    {% if auto_submit %}</noscript>{% endif %}
+                </form>
+
             </div>
         </div>
     </div>
-    <script type="text/javascript">
-        jQuery(function( $ ){
-          $("#id_warn").click(function(e){
-            if($("#id_warn").is(':checked')){
-              createCookie("warn", "on", 10 * 365);
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center footer">
+            <p><a href="https://www.mpedigree.net">Visit mPedigree</a> | Copyright 2021 &copy; mPedigree | All Rights
+                Reserved.</p>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#id_warn").click(function (e) {
+            if ($("#id_warn").is(':checked')) {
+                createCookie("warn", "on", 10 * 365);
             } else {
-              eraseCookie("warn");
+                eraseCookie("warn");
             }
-          });
         });
-        {% if auto_submit %}document.getElementById('login_form').submit(); // SUBMIT FORM{% endif %}
-    </script>
+        // Toggle password visibility
+        $("#togglePassword").on('click', function () {
+            const passwordInput = $('#password'); // Change 'id_password' to match your actual password field ID
+            const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
+            passwordInput.attr('type', type);
+
+            // Toggle the eye icon
+            $('#eyeIcon').toggleClass('fa-eye fa-eye-slash');
+        });
+    });
+    {% if auto_submit %}document.getElementById('login_form').submit(); // SUBMIT FORM{% endif %}
+</script>
 </body>
 </html>
