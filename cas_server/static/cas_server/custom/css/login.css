@@ -86,7 +86,7 @@ a:hover {
     padding: 0.375rem 0.75rem;
   }
 
-  #eyeIcon {
-    font-size: 1rem; /* Adjust as needed */
+#eyeIcon {
+    font-size: 2rem; /* Adjust as needed */
     vertical-align: middle;
-  }
+}
