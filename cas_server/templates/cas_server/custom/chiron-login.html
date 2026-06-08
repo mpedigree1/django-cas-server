@@ -1,6 +1,6 @@
 {% block content %}
 <div>
-    {% if "/login/nasc" in request.path %}
+    {% if "/login/nasc" in request.path or "/metrics/approvals/" in form.service.value or "metrics%2Fapprovals%2F" in form.service.value %}
     {% include "cas_server/custom/nasc_login.html" %}
     {% elif "agrotrack" in request.build_absolute_uri %}
     {% include "cas_server/custom/agrotrack_login.html" %}

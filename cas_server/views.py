@@ -35,11 +35,6 @@ try:
     from django.urls import reverse
 except ImportError:
     from django.core.urlresolvers import reverse
-try:
-    from urllib.parse import parse_qs, unquote, urlparse
-except ImportError:
-    from urlparse import parse_qs, urlparse
-    from urllib import unquote
 
 import re
 import logging
@@ -167,7 +162,6 @@ class LogoutView(View, LogoutMixin):
         logger.info("logout requested")
         # initialize the class attributes
         self.init_get(request)
-        self.request.session.pop(LoginView.NASC_SERVICE_SESSION_KEY, None)
         # if CAS federation mode is enable, bakup the provider before flushing the sessions
         if settings.CAS_FEDERATE:
             try:
@@ -453,35 +447,6 @@ class LoginView(View, LogoutMixin):
     USER_ALREADY_LOGGED = 4
     USER_AUTHENTICATED = 5
     USER_NOT_AUTHENTICATED = 6
-    NASC_SERVICE_SESSION_KEY = "nasc_login_service"
-
-    def is_nasc_login_path(self):
-        """Return ``True`` when the current request targets the NASC login page."""
-        return self.request.path.rstrip('/').endswith('/login/nasc')
-
-    def is_nasc_service_request(self):
-        """Detect approvals flows that should use the NASC-branded login page."""
-        if not self.service:
-            return False
-        if "/metrics/approvals/" in self.service or "metrics%2Fapprovals%2F" in self.service:
-            return True
-        next_targets = parse_qs(urlparse(self.service).query).get("next", [])
-        return any("/metrics/approvals/" in unquote(target) for target in next_targets)
-
-    def stash_nasc_service(self):
-        """Persist the current service across the redirect to the NASC login page."""
-        if self.service:
-            self.request.session[self.NASC_SERVICE_SESSION_KEY] = self.service
-
-    def clear_nasc_service(self):
-        """Forget any NASC-specific service preserved in the session."""
-        self.request.session.pop(self.NASC_SERVICE_SESSION_KEY, None)
-
-    def load_stashed_nasc_service(self):
-        """Restore the NASC service when the custom login page is loaded without a querystring."""
-        if not self.service and self.is_nasc_login_path():
-            self.service = self.request.session.get(self.NASC_SERVICE_SESSION_KEY)
-
     def init_post(self, request):
         """
             Initialize POST received parameters
@@ -494,7 +459,6 @@ class LoginView(View, LogoutMixin):
         self.gateway = request.POST.get('gateway')
         self.method = request.POST.get('method')
         self.ajax = settings.CAS_ENABLE_AJAX_AUTH and 'HTTP_X_AJAX' in request.META
-        self.load_stashed_nasc_service()
         if request.POST.get('warned') and request.POST['warned'] != "False":
             self.warned = True
         self.warn = request.POST.get('warn')
@@ -636,10 +600,6 @@ class LoginView(View, LogoutMixin):
         self.gateway = request.GET.get('gateway')
         self.method = request.GET.get('method')
         self.ajax = settings.CAS_ENABLE_AJAX_AUTH and 'HTTP_X_AJAX' in request.META
-        if self.is_nasc_login_path():
-            self.load_stashed_nasc_service()
-        else:
-            self.clear_nasc_service()
         self.warn = request.GET.get('warn')
         if settings.CAS_FEDERATE:
             # here username and ticket are fetch from the session after a redirection from
@@ -770,7 +730,6 @@ class LoginView(View, LogoutMixin):
                     service_pattern,
                     renew=self.renewed
                 )
-                self.clear_nasc_service()
                 if not self.ajax:
                     return HttpResponseRedirect(redirect_url)
                 else:
@@ -882,14 +841,6 @@ class LoginView(View, LogoutMixin):
             :rtype: django.http.HttpResponse
         """
         url_name = self.request.build_absolute_uri()
-        if (
-            self.service and
-            not self.ajax and
-            not self.is_nasc_login_path() and
-            self.is_nasc_service_request()
-        ):
-            self.stash_nasc_service()
-            return HttpResponseRedirect(reverse("cas_server:nasc_login"))
         if self.service:
             try:
                 service_pattern = ServicePattern.validate(self.service)
