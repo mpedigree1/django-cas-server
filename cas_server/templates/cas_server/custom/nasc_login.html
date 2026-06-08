@@ -1,0 +1,148 @@
+{% load static %}
+{% load i18n %}
+{% load cas_server %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="refresh" content="7200">
+    <title>Goldkeys :: Login</title>
+
+    <link rel="stylesheet" href="{% static 'cas_server/custom/css/nasc-login.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'cas_server/custom/css/readmore.css' %}" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{% static 'cas_server/custom/bootstrap/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.20.0/css/mdb.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+
+    <meta name="robots" content="noindex">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="nasc-bg" id="loginBody">
+    <div class="container" style="padding-top: 110px; padding-bottom: 70px;">
+        <div class="row mybody">
+            <div class="col-md-8 mb-4 white-text text-center text-md-left wow fadeInLeftBig" data-wow-delay="0.9s">
+                <h1 class="white-fg" style="font-size: 50px; font-weight: bold;"><span style="color:#297c54;">NASC</span> SeedCodex</h1>
+                <h3 style="font-weight: bold; color:#d6cc2e">E-Certification Platform for Agro-inputs Regulation</h3>
+                <br>
+
+                <div class="more" style="font-size: 20px; font-weight: 100;">
+                    The <span style="color:#d6cc2e !important">National Agricultural Seeds Council (NASC)</span> has
+                    revamped the national infrastructure for the testing, registration,
+                    release, production, marketing, distribution, certification,
+                    quality control, supply and use of seeds in Nigeria.
+
+                    <br>
+                    <br>
+                    <div class="hider" style="display:none">
+                        This SeedCodex Portal equips all actors in the agro-inputs value
+                        chain in Nigeria and beyond with the modern technological tools
+                        for compliance with the revamped regulations and protocols.
+                        In collaboration with its partners, NASC aims to ensure
+                        that SeedCodex brings together best-in-class mobile and web
+                        technologies to achieve full, rigorous, and secure traceability
+                        of the entire supply chain. Where necessary,
+                        blockchain, machine learning, and similar tools, are integrated to maintain high performance and integrity.
+                    </div>
+
+                    <br>
+                    <button class="btn btn-outline-warning btn-rounded" id="showbutton" onclick="showhider()" type="button">Show More</button>
+                </div>
+            </div>
+
+            <div class="col-md-4 wow fadeInRightBig" data-wow-delay="0.9s">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <img style="height:50px; width:auto; margin-right:10px;" src="{% static 'cas_server/custom/img/goldkeys_logo_2.png' %}">
+                            <img style="height:50px; width:auto;" src="{% static 'cas_server/custom/img/nasc_logo.png' %}">
+                            <h2 style="margin-top:15px; margin-bottom:15px;">
+                                <strong><a class="text-center" style="color: #d6cc2e" target="_blank" href="http://www.goldkeys.org/">SeedCodex</a></strong>
+                            </h2>
+                            <h2 class="black-text text-center">
+                                <strong>Welcome</strong>
+                            </h2>
+                            {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger" id="errorMessage">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <form action="{{ request.path }}" method="post" role="form" id="login_form">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                {% if field|is_hidden %}
+                                    {{ field }}
+                                {% endif %}
+                            {% endfor %}
+                            <hr>
+
+                            {% for field in form %}
+                                {% if not field|is_hidden and not field|is_checkbox %}
+                                <div class="md-form">
+                                    {% if field.name == "username" %}
+                                    <i class="fa fa-user-o fa-sm prefix right-text" style="color: #d6cc2e"></i>
+                                    {% elif field.name == "password" %}
+                                    <i class="fa fa-lock fa-sm prefix warning-text" style="color: #d6cc2e"></i>
+                                    {% endif %}
+                                    {{ field }}
+                                    <label for="{{ field.auto_id }}">{{ field.label|capfirst }}</label>
+                                    {% for error in field.errors %}
+                                    <span class="help-block error">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if auto_submit %}<noscript>{% endif %}
+                            <div class="text-center">
+                                <button id="loginButton" class="btn btn-warning btn-rounded waves-effect waves-light" type="submit">LOG IN</button>
+                                <hr>
+                                <p class="dark-grey-text">Powered by <a style="display: inline; color:#d6cc2e;" href="http://www.mpedigree.net/" target="_blank">
+                                    mPedigree Goldkeys
+                                </a>
+                                <a href="http://goldkeys.org/contact-us/" target="_blank">
+                                    <span style="background: #d6cc2e; margin-right: 10px;" class="badge badge-pill">Contact Us</span>
+                                </a>
+                                </p>
+                            </div>
+                            {% if auto_submit %}</noscript>{% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="full-width alt"></div>
+    </div>
+
+    <script>
+        $('.hider').hide();
+        function showhider() {
+            if ($('.hider').is(":hidden")) {
+                $('.hider').show();
+                $('#showbutton').html('Show Less');
+            } else {
+                $('.hider').hide();
+                $('#showbutton').html('Show More');
+            }
+        }
+
+        {% if auto_submit %}
+        document.getElementById('login_form').submit();
+        {% endif %}
+    </script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.20.0/js/mdb.min.js"></script>
+    <script type="text/javascript">
+        new WOW().init();
+    </script>
+</body>
+</html>

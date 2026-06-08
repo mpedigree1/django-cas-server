@@ -30,6 +30,13 @@ urlpatterns = [
         RedirectView.as_view(pattern_name="cas_server:login", permanent=False, query_string=True)
     ),
     re_path(
+        '^login/nasc$',
+        sensitive_post_parameters('password')(
+            views.LoginView.as_view()
+        ),
+        name='nasc_login'
+    ),
+    re_path(
         '^login$',
         sensitive_post_parameters('password')(
             views.LoginView.as_view()

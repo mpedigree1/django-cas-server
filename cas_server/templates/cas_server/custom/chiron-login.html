@@ -1,7 +1,8 @@
-
 {% block content %}
 <div>
-    {% if "agrotrack" in request.build_absolute_uri %}
+    {% if "/login/nasc" in request.path %}
+    {% include "cas_server/custom/nasc_login.html" %}
+    {% elif "agrotrack" in request.build_absolute_uri %}
     {% include "cas_server/custom/agrotrack_login.html" %}
     {% else %}
     {% include "cas_server/custom/chiron.html" %}
