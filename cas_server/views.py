@@ -35,6 +35,11 @@ try:
     from django.urls import reverse
 except ImportError:
     from django.core.urlresolvers import reverse
+try:
+    from urllib.parse import parse_qs, unquote, urlparse
+except ImportError:
+    from urlparse import parse_qs, urlparse
+    from urllib import unquote
 
 import re
 import logging
@@ -448,6 +453,19 @@ class LoginView(View, LogoutMixin):
     USER_AUTHENTICATED = 5
     USER_NOT_AUTHENTICATED = 6
 
+    def is_nasc_login_path(self):
+        """Return ``True`` when the current request targets the NASC login page."""
+        return self.request.path.rstrip('/').endswith('/login/nasc')
+
+    def is_nasc_service_request(self):
+        """Detect approvals flows that should use the NASC-branded login page."""
+        if not self.service:
+            return False
+        if "/metrics/approvals/" in self.service or "metrics%2Fapprovals%2F" in self.service:
+            return True
+        next_targets = parse_qs(urlparse(self.service).query).get("next", [])
+        return any("/metrics/approvals/" in unquote(target) for target in next_targets)
+
     def init_post(self, request):
         """
             Initialize POST received parameters
@@ -842,6 +860,15 @@ class LoginView(View, LogoutMixin):
             :rtype: django.http.HttpResponse
         """
         url_name = self.request.build_absolute_uri()
+        if (
+            self.service and
+            not self.ajax and
+            not self.is_nasc_login_path() and
+            self.is_nasc_service_request()
+        ):
+            return HttpResponseRedirect(
+                utils.reverse_params("cas_server:nasc_login", params=self.request.GET)
+            )
         if self.service:
             try:
                 service_pattern = ServicePattern.validate(self.service)
