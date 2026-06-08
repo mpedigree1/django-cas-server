@@ -76,11 +76,11 @@
 
                         <form action="{{ request.path }}" method="post" role="form" id="login_form">
                             {% csrf_token %}
-                            <input type="hidden" name="service" value="{{ request.POST.service|default:request.GET.service|default:form.service.value|default:'' }}" id="id_service">
-                            <input type="hidden" name="lt" value="{{ request.POST.lt|default:request.GET.lt|default:form.lt.value|default:'' }}" id="id_lt">
-                            <input type="hidden" name="renew" value="{{ request.POST.renew|default:request.GET.renew|default:form.renew.value|default:'' }}" id="id_renew">
-                            <input type="hidden" name="gateway" value="{{ request.POST.gateway|default:request.GET.gateway|default:form.gateway.value|default:'' }}" id="id_gateway">
-                            <input type="hidden" name="method" value="{{ request.POST.method|default:request.GET.method|default:form.method.value|default:'' }}" id="id_method">
+                            {% for field in form %}
+                                {% if field|is_hidden %}
+                                {{ field }}
+                                {% endif %}
+                            {% endfor %}
                             <hr>
 
                             {% for field in form %}
